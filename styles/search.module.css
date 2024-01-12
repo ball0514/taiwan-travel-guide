@@ -1,0 +1,157 @@
+.result {
+  margin-bottom: 10rem;
+  padding: 0 5rem;
+}
+.result .title {
+  display: flex;
+}
+.result .title h4 {
+  font-size: 2rem;
+  margin: 5rem 1rem 0 5rem;
+  color: #1e1e1e;
+}
+.result .title p {
+  font-size: 1.2rem;
+  margin: 5rem 0 0 0rem;
+  padding-top: 0.8rem;
+  color: #646464;
+}
+.result .title p span {
+  color: #bea363;
+  margin: 0 0.5rem;
+}
+.result .itemList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 255px);
+  grid-gap: 3rem;
+  justify-content: center;
+}
+.result .itemList .item {
+  position: relative;
+  width: 255px;
+  height: 271px;
+  margin: 2rem 0;
+  border-radius: 20px;
+}
+.result .itemList .item .picture {
+  display: block;
+  width: 255px;
+  height: 200px;
+  border-radius: 20px;
+  transition: all 0.2s ease-out;
+}
+.result .itemList .item .picture:hover {
+  transform: scale(1.1, 1.1);
+}
+.result .itemList .item .description {
+  color: #646464;
+  padding-top: 1rem;
+  display: inline;
+  font-weight: bold;
+}
+.result .itemList .item .description p {
+  font-size: larger;
+  font-weight: bold;
+  color: #2f2f2f;
+  margin: 0.5rem 0 0.3rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.result .itemList .item .description img {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+.result .noList div {
+  display: flex;
+  justify-content: center;
+  margin: 5rem 0 1rem 0;
+}
+.result .noList div img {
+  display: block;
+  width: 80px;
+  height: 80px;
+}
+.result .noList p {
+  text-align: center;
+  color: #7f977b;
+  font-weight: bold;
+  line-height: 1.5rem;
+}
+.result .page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.result .page .btnArrow {
+  display: inline-block;
+  background-color: #e5e5e5;
+  opacity: 50%;
+}
+.result .page .btnArrow:hover {
+  opacity: 100%;
+}
+.result .page .btnArrow img {
+  width: 24px;
+  height: 24px;
+  margin: 4px;
+}
+.result .page .numberArea {
+  display: flex;
+  justify-content: center;
+}
+.result .page .numberArea .btnNumber {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.result .page .numberArea .btnCurrent {
+  border: 1px #65895f solid;
+  color: #65895f;
+}
+.result .page .numberArea .btnOther {
+  border: 1px #e5e5e5 solid;
+  color: #646464;
+}
+.result .page .btn {
+  width: 32px;
+  height: 32px;
+  margin: 4px;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: all 0.2s ease-out;
+}
+.result .page .btn:hover {
+  color: white;
+  background-color: #7f977b;
+}
+
+@media (max-width: 768px) {
+  .result .title h4 {
+    margin: 3rem 1rem 0 1rem;
+  }
+  .result .title p {
+    margin-top: 3rem;
+  }
+  .result .itemList {
+    grid-template-columns: repeat(auto-fill, 345px);
+    grid-gap: 1rem;
+  }
+  .result .itemList .item {
+    width: 345px;
+    height: 230px;
+    margin: 1rem 0 0;
+  }
+  .result .itemList .item .picture {
+    width: 345px;
+    height: 160px;
+    -o-object-fit: cover;
+       object-fit: cover;
+  }
+}
+@media (max-width: 440px) {
+  .result {
+    padding: 0 1rem;
+  }
+}/*# sourceMappingURL=search.module.css.map */

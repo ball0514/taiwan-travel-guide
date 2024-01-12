@@ -1,0 +1,467 @@
+.banner {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  height: 25vh;
+  padding-top: 15vh;
+}
+.banner .text {
+  font-size: 3rem;
+  line-height: 4rem;
+  width: 555px;
+  margin-bottom: 3rem;
+  padding: 0 2rem;
+}
+.banner .text span {
+  padding-bottom: 0.5px;
+  border-bottom: 3px #e0da48 solid;
+}
+.banner .text p {
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+  font-weight: 600;
+  color: #646464;
+}
+.banner .search {
+  width: 405px;
+  margin-bottom: 3rem;
+  padding: 1 2rem;
+}
+.banner .search form {
+  padding: 0 27.5px;
+}
+.banner .search form select {
+  width: 350px;
+  height: 50px;
+  color: #7f977b;
+  background: url("../public/Icon/arrow-down16.svg") no-repeat right 1rem center;
+  margin: 0.2rem;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  padding: 1rem;
+  font-weight: bold;
+}
+.banner .search form input {
+  width: 350px;
+  height: 50px;
+  margin: 0.2rem;
+  background-color: #f9f9f9;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  padding: 1rem;
+}
+.banner .search form button {
+  display: flex;
+  width: 350px;
+  height: 50px;
+  color: white;
+  background-color: #7f977b;
+  margin: 0.2rem;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 10px;
+  font-weight: bolder;
+}
+.banner .search form button:hover {
+  background-color: #65895f;
+}
+.banner .search form button img {
+  padding-right: 1rem;
+}
+
+.main {
+  height: 80vh;
+  margin-top: 20vh;
+  margin-bottom: 90rem;
+  padding: 0 5rem 0 5rem;
+}
+.main .slider {
+  height: 30rem;
+  position: relative;
+}
+.main .slider .carouselItem {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.main .slider .carouselItem a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 100%;
+}
+.main .slider .carouselItem a img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 24px;
+}
+.main .slider .carouselItem a p {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  font-size: 1.5rem;
+  letter-spacing: 0.05rem;
+  color: white;
+  font-weight: bold;
+}
+.main .slider .control {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  opacity: 0%;
+  transition: all 0.2s ease-in-out;
+}
+.main .slider .control:hover {
+  opacity: 100%;
+}
+.main .slider .control .arrow {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.main .slider .control .arrowLeft {
+  left: 6rem;
+  background: url("../public/Icon/Carousel-Arrow-Left.svg");
+}
+.main .slider .control .arrowLeft:hover {
+  background: url("../public/Icon/Carousel-Arrow-Left_hover.svg");
+}
+.main .slider .control .arrowRight {
+  right: 6rem;
+  background: url("../public/Icon/Carousel-Arrow-Right.svg");
+}
+.main .slider .control .arrowRight:hover {
+  background: url("../public/Icon/Carousel-Arrow-Right_hover.svg");
+}
+.main .slider .control .pagination {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 6rem;
+  bottom: 1rem;
+}
+.main .slider .control .pagination .btn {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #c4c4c4;
+  margin: 0.5rem;
+}
+.main .slider .control .pagination .selected {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+}
+.main .slider .hidden {
+  display: none;
+}
+.main .more .sort {
+  display: flex;
+  justify-content: space-between;
+}
+.main .more .sort h4 {
+  font-size: 2rem;
+  margin: 5rem 0 0 5rem;
+}
+.main .more .sort a {
+  display: flex;
+  align-items: center;
+  color: #ff725e;
+  font-weight: bold;
+  margin: 5rem 5rem 0 0;
+}
+.main .more .bigInfo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.main .more .bigInfo a {
+  display: flex;
+  position: relative;
+  width: 540px;
+  height: 160px;
+  background-color: #f9f9f9;
+  margin: 2rem;
+  border: 1px #e5e5e5 solid;
+  border-radius: 5px;
+}
+.main .more .bigInfo a img {
+  width: 160px;
+  height: 160px;
+  border-radius: 6px 0 0 6px;
+  transition: all 0.2s ease-out;
+}
+.main .more .bigInfo a img:hover {
+  transform: scale(1.1, 1.1);
+}
+.main .more .bigInfo a .description {
+  padding: 1rem;
+}
+.main .more .bigInfo a .description .date {
+  color: #646464;
+  margin-bottom: 10px;
+}
+.main .more .bigInfo a .description .title {
+  color: #2f2f2f;
+  font-size: larger;
+  font-weight: bold;
+}
+.main .more .bigInfo a .description .city {
+  color: #646464;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 11rem;
+  bottom: 1rem;
+}
+.main .more .bigInfo a .description .city img {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+.main .more .bigInfo a .description .detail {
+  color: #7f977b;
+  font-weight: bold;
+  display: flex;
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+}
+.main .more .bigInfo a .description .detail img {
+  width: 16px;
+  height: 16px;
+}
+.main .more .smallInfo {
+  display: flex;
+  justify-content: center;
+}
+.main .more .smallInfo a {
+  display: block;
+  position: relative;
+  width: 255px;
+  height: 271px;
+  margin: 2rem;
+  border-radius: 20px;
+}
+.main .more .smallInfo a img {
+  width: 255px;
+  height: 200px;
+  border-radius: 20px;
+  transition: all 0.2s ease-out;
+}
+.main .more .smallInfo a img:hover {
+  transform: scale(1.1, 1.1);
+}
+.main .more .smallInfo a .content {
+  color: #646464;
+  padding-top: 1rem;
+  display: inline;
+  font-weight: bold;
+}
+.main .more .smallInfo a .content p {
+  font-size: larger;
+  font-weight: bold;
+  color: #2f2f2f;
+  margin: 0.5rem 0 0.3rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.main .more .smallInfo a .content img {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+@media (max-width: 1368px) {
+  .main {
+    margin-bottom: 85rem;
+  }
+  .main .more .bigInfo a {
+    width: 400px;
+  }
+}
+@media (max-width: 1280px) {
+  .main {
+    margin-bottom: 90rem;
+  }
+  .main .more .smallInfo {
+    overflow-x: scroll;
+    justify-content: start;
+  }
+}
+@media (max-width: 1100px) {
+  .main {
+    margin-bottom: 85rem;
+  }
+  .main .more .bigInfo a {
+    width: 335px;
+    height: 120px;
+  }
+  .main .more .bigInfo a img {
+    width: 120px;
+    height: 120px;
+  }
+  .main .more .bigInfo a .description {
+    width: 215px;
+  }
+  .main .more .bigInfo a .description .title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .main .more .bigInfo a .description .city {
+    left: 8.5rem;
+  }
+  .main .more .bigInfo a .description .city img {
+    display: none;
+  }
+}
+@media (max-width: 960px) {
+  .banner .text h2 {
+    text-align: center;
+    font-size: 2.5rem;
+  }
+  .banner .text p {
+    text-align: center;
+  }
+  .main {
+    margin-top: 50vh;
+    margin-bottom: 115rem;
+  }
+  .main .slider {
+    height: 25rem;
+  }
+  .main .slider .control {
+    opacity: 100%;
+  }
+  .main .more .bigInfo a {
+    width: 540px;
+    height: 160px;
+  }
+  .main .more .bigInfo a img {
+    width: 160px;
+    height: 160px;
+  }
+  .main .more .bigInfo a .description {
+    width: 380px;
+  }
+  .main .more .bigInfo a .description .title {
+    overflow: visible;
+    white-space: normal;
+  }
+  .main .more .bigInfo a .description .city {
+    left: 11rem;
+  }
+  .main .more .bigInfo a .description .city img {
+    display: inline;
+  }
+}
+@media (max-width: 640px) {
+  .main {
+    margin-bottom: 90rem;
+    padding: 0 2rem;
+  }
+  .main .slider {
+    height: 20rem;
+  }
+  .main .slider .control .arrowLeft {
+    left: 3rem;
+  }
+  .main .slider .control .arrowRight {
+    right: 3rem;
+  }
+  .main .slider .control .pagination {
+    right: 3rem;
+    bottom: 0.5rem;
+  }
+  .main .more .sort h4 {
+    margin-left: 0;
+  }
+  .main .more .sort a {
+    margin-right: 0;
+  }
+  .main .more .bigInfo a {
+    width: 345px;
+    height: 90px;
+    border-radius: 12px;
+    margin: 1rem;
+  }
+  .main .more .bigInfo a img {
+    width: 90px;
+    height: 90px;
+    -o-object-fit: cover;
+       object-fit: cover;
+    border-radius: 12px 0 0 12px;
+  }
+  .main .more .bigInfo a .description {
+    padding: 0.3rem;
+    width: 250px;
+  }
+  .main .more .bigInfo a .description .date {
+    margin: 0.2rem;
+  }
+  .main .more .bigInfo a .description .title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .main .more .bigInfo a .description .city {
+    left: 6rem;
+    bottom: 0.2rem;
+    font-weight: normal;
+  }
+  .main .more .bigInfo a .description .city img {
+    display: none;
+  }
+  .main .more .bigInfo a .description .detail {
+    display: none;
+  }
+}
+@media (max-width: 400px) {
+  .banner .text {
+    width: 350px;
+    padding: 0;
+  }
+  .banner .text h2 {
+    font-size: 1.8rem;
+    line-height: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .banner .text p {
+    font-size: 1rem;
+  }
+  .banner .search {
+    width: 350px;
+  }
+  .banner .search form {
+    margin: 0;
+    padding: 0;
+  }
+  .main {
+    padding: 0 10px;
+  }
+  .main .slider {
+    height: 15rem;
+  }
+  .main .slider .carouselItem a {
+    width: 100%;
+  }
+  .main .slider .arrow {
+    display: none;
+  }
+}/*# sourceMappingURL=index.module.css.map */

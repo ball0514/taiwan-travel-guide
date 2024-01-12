@@ -1,0 +1,102 @@
+.nav {
+  padding: 100px 200px 50px 200px;
+}
+.nav ol {
+  display: flex;
+}
+.nav ol li {
+  margin: 0.2rem;
+}
+.nav ol li a {
+  color: #6e7d60;
+}
+
+.form form {
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.form form select {
+  width: 240px;
+  height: 50px;
+  color: #7f977b;
+  background: url("../public/Icon/arrow-down16.svg") no-repeat right 1rem center;
+  margin: 0.5rem;
+  border: 1px #e6e6e6 solid;
+  border-radius: 5px;
+  padding: 1rem;
+  font-weight: bold;
+}
+.form form .date {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 240px;
+  height: 50px;
+  color: #7f977b;
+  background: url("../public/Icon/datepicker16.svg") no-repeat right 1rem center;
+  margin: 0.5rem;
+  border: 1px #e6e6e6 solid;
+  border-radius: 5px;
+  padding: 1rem;
+  font-weight: bold;
+}
+.form form .date::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+.form form input {
+  width: 600px;
+  height: 50px;
+  margin: 0.5rem;
+  background-color: #f9f9f9;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  padding: 1rem;
+}
+.form form button {
+  display: flex;
+  width: 210px;
+  height: 50px;
+  color: white;
+  background-color: #7f977b;
+  margin: 0.5rem;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 10px;
+  font-weight: bolder;
+}
+.form form button:hover {
+  background-color: #65895f;
+}
+.form form button img {
+  padding-right: 1rem;
+}
+
+@media (max-width: 768px) {
+  .nav {
+    padding: 100px 0rem 1rem 10rem;
+  }
+  .form form {
+    flex-direction: column;
+    height: 200px;
+  }
+  .form form select {
+    width: 345px;
+  }
+  .form form .date {
+    width: 345px;
+  }
+  .form form input {
+    width: 345px;
+  }
+  .form form button {
+    width: 345px;
+  }
+}
+@media (max-width: 420px) {
+  .nav {
+    padding-left: 2rem;
+  }
+}/*# sourceMappingURL=sort.module.css.map */

@@ -1,0 +1,338 @@
+.nav {
+  padding: 100px 4.5rem 20px 4.5rem;
+  ol {
+    display: flex;
+    li {
+      margin: 0.2rem;
+      a {
+        color: #6e7d60;
+      }
+    }
+  }
+}
+
+.main {
+  .banner {
+    display: flex;
+    justify-content: center;
+    background-size: cover;
+    img {
+      width: 90%;
+      height: 60vh;
+      border-radius: 24px;
+      object-fit: cover;
+    }
+  }
+  h4 {
+    font-size: 2rem;
+    margin: 2rem 4.5rem 0.75rem;
+  }
+  .class {
+    display: flex;
+    margin-left: 4.5rem;
+    li {
+      color: #bea363;
+      margin: 0rem 0.5rem 0.75rem 0;
+      border: 1px #bea363 solid;
+      border-radius: 20px;
+      padding: 5px 15px;
+    }
+  }
+  .description {
+    margin: 1.5rem 4.5rem;
+    .title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    p {
+      line-height: 1.8rem;
+    }
+  }
+  .detail {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    .info {
+      width: 40%;
+      height: 50vh;
+      background-color: #f9f9f9;
+      margin: 1.5rem 1.5rem 5rem 4.5rem;
+      border-radius: 12px;
+      padding: 30px;
+      p {
+        line-height: 2rem;
+      }
+      span {
+        font-weight: bold;
+      }
+      a {
+        color: #6e7d60;
+      }
+    }
+    .map {
+      width: 40%;
+      height: 50vh;
+      margin: 1.5rem 4.5rem 1.5rem 1.5rem;
+      p {
+        font-weight: bold;
+        margin: 1.5rem 0;
+      }
+      .nearby {
+        display: flex;
+        justify-content: space-between;
+        .sort {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 160px;
+          height: 110px;
+          font-weight: bold;
+          color: #7f977b;
+          margin-bottom: 5rem;
+          border: 1.5px #e5e5e5 solid;
+          border-radius: 6px;
+        }
+        .spot {
+          background: url("../public/Icon/nearby-scene30.svg") no-repeat center
+            top 1.4rem;
+          transition: all 0.2 ease;
+          &:hover {
+            background: url("../public/Icon/nearby-scene30_hover.svg") no-repeat
+              center top 1.4rem;
+          }
+          div {
+            text-align: center;
+            img {
+              width: 30px;
+              height: 30px;
+            }
+            p {
+              margin: 2.5rem 0 0.5rem;
+            }
+          }
+        }
+        .event {
+          background: url("../public/Icon/nearby-event30.svg") no-repeat center
+            top 1.4rem;
+          transition: all 0.2 ease;
+          &:hover {
+            background: url("../public/Icon/nearby-event30_hover.svg") no-repeat
+              center top 1.4rem;
+          }
+          div {
+            text-align: center;
+            img {
+              width: 30px;
+              height: 30px;
+            }
+            p {
+              margin: 2.5rem 0 0.5rem;
+            }
+          }
+        }
+        .food {
+          background: url("../public/Icon/nearby-food30.svg") no-repeat center
+            top 1.4rem;
+          transition: all 0.2 ease;
+          &:hover {
+            background: url("../public/Icon/nearby-food30_hover.svg") no-repeat
+              center top 1.4rem;
+          }
+          div {
+            text-align: center;
+            img {
+              width: 30px;
+              height: 30px;
+            }
+            p {
+              margin: 2.5rem 0 0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+  .more {
+    margin-bottom: 5rem;
+    .title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin: 10rem 5rem 0.75rem;
+      p {
+        font-size: 2rem;
+        margin-left: 5rem;
+      }
+      a {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        color: #ff725e;
+        margin-right: 5rem;
+      }
+    }
+    .itemList {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 255px);
+      grid-gap: 4rem;
+      justify-content: center;
+      padding: 0 5rem;
+      .item {
+        display: block;
+        position: relative;
+        width: 255px;
+        height: 271px;
+        margin: 2rem 0;
+        border-radius: 20px;
+        // padding: 0 auto;
+        .picture {
+          display: block;
+          width: 255px;
+          height: 200px;
+          border-radius: 20px;
+          transition: all 0.2s ease-out;
+          &:hover {
+            transform: scale(1.1, 1.1);
+          }
+        }
+        .description {
+          color: #646464;
+          padding-top: 1rem;
+          display: inline;
+          font-weight: bold;
+          p {
+            font-size: larger;
+            font-weight: bold;
+            color: #2f2f2f;
+            margin: 0.5rem 0 0.3rem;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          img {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1380px) {
+  .main {
+    .more {
+      .itemList {
+        display: flex;
+        overflow-x: scroll;
+        justify-content: start;
+      }
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .main {
+    .banner {
+      img {
+        height: 40vh;
+      }
+    }
+    .detail {
+      box-sizing: border-box;
+      background-color: #f9f9f9;
+      width: 100%;
+      .info {
+        width: 100%;
+        height: auto;
+        margin: 0;
+        border-radius: 0;
+      }
+      .map {
+        width: 100%;
+        height: 110vh;
+        margin: 0;
+        padding: 0 2rem;
+        .nearby {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          .spot {
+            background: url("../public/Icon/nearby-scene30.svg") no-repeat
+              center top 0.8rem;
+            &:hover {
+              background: url("../public/Icon/nearby-scene30_hover.svg")
+                no-repeat center top 0.8rem;
+            }
+          }
+          .event {
+            background: url("../public/Icon/nearby-event30.svg") no-repeat
+              center top 0.8rem;
+            &:hover {
+              background: url("../public/Icon/nearby-event30_hover.svg")
+                no-repeat center top 0.8rem;
+            }
+          }
+          .food {
+            background: url("../public/Icon/nearby-food30.svg") no-repeat center
+              top 0.8rem;
+            &:hover {
+              background: url("../public/Icon/nearby-food30_hover.svg")
+                no-repeat center top 0.8rem;
+            }
+          }
+          .sort {
+            width: 345px;
+            height: 76px;
+            margin-bottom: 0.2rem;
+            background-color: white;
+          }
+        }
+      }
+    }
+    .more {
+      .title {
+        margin: 2rem 2.5rem 0.75rem;
+        p {
+          margin: 0 1rem 0 0;
+        }
+        a {
+          text-align: end;
+          margin: 0 0 0 1rem;
+        }
+      }
+      .itemList {
+        padding: 0 2.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .main {
+    .banner {
+      img {
+        height: 30vh;
+      }
+    }
+    h4 {
+      margin: 2rem 2.5rem 0.75rem;
+    }
+    .class {
+      margin-left: 2.5rem;
+    }
+    .description {
+      margin: 1.5rem 2.5rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    padding: 100px 2rem 20px 2rem;
+  }
+}
