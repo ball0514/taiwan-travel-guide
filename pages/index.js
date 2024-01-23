@@ -72,7 +72,7 @@ export default function Home() {
   const [number, setNumber] = useState(50);
 
   useEffect(() => {
-    setNumber(Math.floor(1000 * Math.random()));
+    setNumber(Math.floor(200 * Math.random()));
   }, []);
 
   useEffect(() => {
