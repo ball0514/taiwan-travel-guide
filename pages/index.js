@@ -291,28 +291,28 @@ export default function Home() {
               </Link>
             </div>
           ))}
-          <div className={style.control}>
-            <button
-              className={`${style.arrow} ${style.arrowLeft}`}
-              onClick={previous}
-            ></button>
-            <button
-              className={`${style.arrow} ${style.arrowRight}`}
-              onClick={next}
-            ></button>
-            <div className={style.pagination}>
-              {carousel?.map((item, index) => (
-                <button
-                  className={`${style.btn} ${
-                    index === page ? style.selected : ""
-                  }`}
-                  id="btn"
-                  key={index}
-                  onClick={() => navBtn(index)}
-                ></button>
-              ))}
-            </div>
+          {/* <div className={style.control}> */}
+          <button
+            className={`${style.arrow} ${style.arrowLeft}`}
+            onClick={previous}
+          ></button>
+          <button
+            className={`${style.arrow} ${style.arrowRight}`}
+            onClick={next}
+          ></button>
+          <div className={style.pagination}>
+            {carousel?.map((item, index) => (
+              <button
+                className={`${style.btn} ${
+                  index === page ? style.selected : ""
+                }`}
+                id="btn"
+                key={index}
+                onClick={() => navBtn(index)}
+              ></button>
+            ))}
           </div>
+          {/* </div> */}
         </section>
         <section className={style.more}>
           <div className={style.sort}>
