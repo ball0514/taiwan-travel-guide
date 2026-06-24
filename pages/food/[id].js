@@ -30,35 +30,36 @@ export default function Page() {
   useEffect(() => {
     if (receivedData) {
       setCenter({
-        lat: receivedData.Position.PositionLat,
-        lng: receivedData.Position.PositionLon,
+        lat: receivedData.PositionLat,
+        lng: receivedData.PositionLon,
       });
     }
-    const cityMapping = {
-      臺北市: "Taipei",
-      新北市: "NewTaipei",
-      基隆市: "Keelung",
-      宜蘭縣: "YilanCounty",
-      桃園市: "Taoyuan",
-      新竹縣: "HsinchuCounty",
-      新竹市: "Hsinchu",
-      苗栗縣: "MiaoliCounty",
-      臺中市: "Taichung",
-      彰化縣: "ChanghuaCounty",
-      南投縣: "NantouCounty",
-      雲林縣: "YunlinCounty",
-      嘉義縣: "ChiayiCounty",
-      嘉義市: "Chiayi",
-      臺南市: "Tainan",
-      高雄市: "Kaohsiung",
-      屏東縣: "PingtungCounty",
-      花蓮縣: "HualienCounty",
-      臺東縣: "TaitungCounty",
-      澎湖縣: "PenghuCounty",
-      金門縣: "KinmenCounty",
-      連江縣: "LienchiangCounty",
-    };
-    setCity(cityMapping[receivedData?.City]);
+    // const cityMapping = {
+    //   臺北市: "Taipei",
+    //   新北市: "NewTaipei",
+    //   基隆市: "Keelung",
+    //   宜蘭縣: "YilanCounty",
+    //   桃園市: "Taoyuan",
+    //   新竹縣: "HsinchuCounty",
+    //   新竹市: "Hsinchu",
+    //   苗栗縣: "MiaoliCounty",
+    //   臺中市: "Taichung",
+    //   彰化縣: "ChanghuaCounty",
+    //   南投縣: "NantouCounty",
+    //   雲林縣: "YunlinCounty",
+    //   嘉義縣: "ChiayiCounty",
+    //   嘉義市: "Chiayi",
+    //   臺南市: "Tainan",
+    //   高雄市: "Kaohsiung",
+    //   屏東縣: "PingtungCounty",
+    //   花蓮縣: "HualienCounty",
+    //   臺東縣: "TaitungCounty",
+    //   澎湖縣: "PenghuCounty",
+    //   金門縣: "KinmenCounty",
+    //   連江縣: "LienchiangCounty",
+    // };
+    // setCity(cityMapping[receivedData?.City]);
+    setCity(receivedData?.PostalAddress.City);
   }, [receivedData]);
 
   const containerStyle = {
@@ -82,14 +83,21 @@ export default function Page() {
           qs.stringify(parameter),
           {
             headers: { "content-type": "application/x-www-form-urlencoded" },
-          }
+          },
         );
         // console.log(data.access_token);
-        const { data: restaurant } = await axios.get(
-          `https://tdx.transportdata.tw/api/basic/v2/Tourism/Restaurant/${city}?%24top=4&%24skip=${number}&%24format=JSON`,
+        const {
+          data: { value: restaurant },
+        } = await axios.get(
+          `https://tdx.transportdata.tw/api/tourism/service/odata/V2/Tourism/Restaurant`,
           {
             headers: { authorization: `Bearer ${data.access_token}` },
-          }
+            params: {
+              $top: 4,
+              $skip: number,
+              $filter: `PostalAddress/City eq '${city}'`,
+            },
+          },
         );
         console.log(restaurant);
         setMore(restaurant);
@@ -115,7 +123,7 @@ export default function Page() {
           </li>
           <li>
             <Link href={`/food/search?city=${city}`}>
-              / {receivedData?.City}
+              / {receivedData?.PostalAddress.City}
             </Link>
           </li>
           <li>/ {receivedData?.RestaurantName}</li>
@@ -124,10 +132,8 @@ export default function Page() {
       <main className={style.main}>
         <section className={style.banner}>
           <img
-            src={
-              receivedData?.Picture.PictureUrl1 ||
-              "/images/NoImage-1100x400.svg"
-            }
+            src={receivedData?.Images[0]?.URL || "/images/NoImage-1100x400.svg"}
+            alt={receivedData?.Images[0]?.Name}
           />
         </section>
         <h4>{receivedData?.RestaurantName}</h4>
@@ -143,22 +149,22 @@ export default function Page() {
         </section>
         <section className={style.detail}>
           <div className={style.info}>
-            {receivedData?.OpenTime && (
+            {receivedData?.ServiceTimeInfo && (
               <p>
                 <span>營業時間：</span>
-                {receivedData.OpenTime}
+                {receivedData.ServiceTimeInfo}
               </p>
             )}
-            {receivedData?.Phone && (
+            {receivedData?.Telephones?.[0]?.Tel && (
               <p>
                 <span>聯絡電話：</span>
-                {receivedData.Phone}
+                {receivedData.Telephones[0].Tel}
               </p>
             )}
-            {receivedData?.Address && (
+            {receivedData?.PostalAddress?.StreetAddress && (
               <p>
                 <span>餐廳地址：</span>
-                {receivedData.Address}
+                {receivedData.PostalAddress.StreetAddress}
               </p>
             )}
             {receivedData?.WebsiteUrl && (
@@ -207,7 +213,7 @@ export default function Page() {
           <div className={style.title}>
             <p>還有這些不能錯過的美食</p>
             <Link href={`/food/search?city=${city}`}>
-              更多{receivedData?.City}美食
+              更多{receivedData?.PostalAddress.City}美食
               <img src="/Icon/arrow-right16_R.svg" />
             </Link>
           </div>
@@ -222,15 +228,14 @@ export default function Page() {
                 className={style.item}
               >
                 <img
-                  src={
-                    food.Picture.PictureUrl1 || "/images/NoImage-255x200.svg"
-                  }
+                  src={food.Images[0]?.URL || "/images/NoImage-255x200.svg"}
+                  alt={food.Images[0]?.Name}
                   className={style.picture}
                 />
                 <div className={style.description}>
                   <p>{food.RestaurantName}</p>
                   <img src="/Icon/spot16.svg" />
-                  {food.City}
+                  {food.PostalAddress.City}
                 </div>
               </Link>
             ))}

@@ -29,19 +29,43 @@ export default function Search() {
           qs.stringify(parameter),
           {
             headers: { "content-type": "application/x-www-form-urlencoded" },
-          }
+          },
         );
         // console.log(data.access_token);
 
-        const { data: scenicSpots } = await axios.get(
-          `https://tdx.transportdata.tw/api/basic/v2/Tourism/ScenicSpot${
-            city ? `/${city}` : ""
-          }?${q ? `%24filter=contains(ScenicSpotName,'${q}')&` : ""}${
-            cat ? `%24filter=contains(Class1,'${cat}')&` : ""
-          }%24format=JSON`,
-          {
-            headers: { authorization: `Bearer ${data.access_token}` },
-          }
+        const filterConditions = [];
+
+        if (city) {
+          filterConditions.push(`PostalAddress/City eq '${city}'`);
+        }
+
+        if (q) {
+          filterConditions.push(`contains(AttractionName, '${q}')`);
+        }
+
+        if (cat) {
+          filterConditions.push(`contains(Class1, '${cat}')`);
+        }
+
+        // 用 ' and ' 把所有條件串起來
+        // 組合後會變成: "PostalAddress/City eq '臺北市' and contains(ScenicSpotName, '公園')"
+        const finalFilter = filterConditions.join(" and ");
+
+        const payload = {
+          headers: { authorization: `Bearer ${data.access_token}` },
+        };
+
+        if (filterConditions.length > 0) {
+          payload.params = {
+            $filter: finalFilter,
+          };
+        }
+
+        const {
+          data: { value: scenicSpots },
+        } = await axios.get(
+          `https://tdx.transportdata.tw/api/tourism/service/odata/V2/Tourism/Attraction`,
+          payload,
         );
         console.log(scenicSpots);
 
@@ -63,6 +87,7 @@ export default function Search() {
         setRender(content);
         console.log(array);
       } catch (err) {
+        setRender([]);
         console.log(err);
       }
     }
@@ -101,22 +126,21 @@ export default function Search() {
               {formData?.[page - 1].map((spot) => (
                 <Link
                   href={{
-                    pathname: `/spot/${spot.ScenicSpotID}`,
+                    pathname: `/spot/${spot.AttractionID}`,
                     query: { spot: JSON.stringify(spot) },
                   }}
-                  key={spot.ScenicSpotID}
+                  key={spot.AttractionID}
                   className={style.item}
                 >
                   <img
-                    src={
-                      spot.Picture.PictureUrl1 || "/images/NoImage-255x200.svg"
-                    }
+                    src={spot.Images[0]?.URL || "/images/NoImage-255x200.svg"}
+                    alt={spot.Images[0]?.Name}
                     className={style.picture}
                   />
                   <div className={style.description}>
-                    <p>{spot.ScenicSpotName}</p>
+                    <p>{spot.AttractionName}</p>
                     <img src="/Icon/spot16.svg" />
-                    {spot.City}
+                    {spot.PostalAddress.City}
                   </div>
                 </Link>
               ))}

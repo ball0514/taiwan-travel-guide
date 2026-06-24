@@ -29,20 +29,43 @@ export default function Search() {
           qs.stringify(parameter),
           {
             headers: { "content-type": "application/x-www-form-urlencoded" },
-          }
+          },
         );
         // console.log(data.access_token);
 
-        const { data: restaurant } = await axios.get(
-          `https://tdx.transportdata.tw/api/basic/v2/Tourism/Restaurant${
-            city ? `/${city}` : ""
-          }?${q ? `%24filter=contains(RestaurantName,'${q}')&` : ""}${
-            cat ? `%24filter=contains(Class,'${cat}')&` : ""
-          }
-            %24format=JSON`,
-          {
-            headers: { authorization: `Bearer ${data.access_token}` },
-          }
+        const filterConditions = [];
+
+        if (city) {
+          filterConditions.push(`PostalAddress/City eq '${city}'`);
+        }
+
+        if (q) {
+          filterConditions.push(`contains(AttractionName, '${q}')`);
+        }
+
+        if (cat) {
+          filterConditions.push(`contains(Class1, '${cat}')`);
+        }
+
+        // 用 ' and ' 把所有條件串起來
+        // 組合後會變成: "PostalAddress/City eq '臺北市' and contains(ScenicSpotName, '公園')"
+        const finalFilter = filterConditions.join(" and ");
+
+        const payload = {
+          headers: { authorization: `Bearer ${data.access_token}` },
+        };
+
+        if (filterConditions.length > 0) {
+          payload.params = {
+            $filter: finalFilter,
+          };
+        }
+
+        const {
+          data: { value: restaurant },
+        } = await axios.get(
+          `https://tdx.transportdata.tw/api/tourism/service/odata/V2/Tourism/Restaurant`,
+          payload,
         );
         console.log(restaurant);
 
@@ -65,6 +88,7 @@ export default function Search() {
         setRender(content);
         console.log(content);
       } catch (err) {
+        setRender([]);
         console.log(err);
       }
     }
@@ -110,15 +134,14 @@ export default function Search() {
                   className={style.item}
                 >
                   <img
-                    src={
-                      food.Picture.PictureUrl1 || "/images/NoImage-255x200.svg"
-                    }
+                    src={food.Images[0]?.URL || "/images/NoImage-255x200.svg"}
+                    alt={food.Images[0]?.Name}
                     className={style.picture}
                   />
                   <div className={style.description}>
                     <p>{food.RestaurantName}</p>
                     <img src="/Icon/spot16.svg" />
-                    {food.City}
+                    {food.PostalAddress.City}
                   </div>
                 </Link>
               ))}

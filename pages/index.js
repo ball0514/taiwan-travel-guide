@@ -89,54 +89,75 @@ export default function Home() {
           qs.stringify(parameter),
           {
             headers: { "content-type": "application/x-www-form-urlencoded" },
-          }
+          },
         );
 
         // console.log(data.access_token);
 
-        const { data: activity } = await axios.get(
-          `https://tdx.transportdata.tw/api/basic/v2/Tourism/Activity?%24top=4&%24skip=${number}&%24format=JSON`,
+        const {
+          data: { value: activity },
+        } = await axios.get(
+          `https://tdx.transportdata.tw/api/tourism/service/odata/V2/Tourism/Event?%24top=4&%24skip=${number}`,
           {
             headers: { authorization: `Bearer ${data.access_token}` },
-          }
+          },
         );
         setActivity(activity);
         // console.log(activity);
 
-        const { data: scenicSpots } = await axios.get(
-          `https://tdx.transportdata.tw/api/basic/v2/Tourism/ScenicSpot?%24top=4&%24skip=${number}&%24format=JSON`,
+        const {
+          data: { value: scenicSpots },
+        } = await axios.get(
+          `https://tdx.transportdata.tw/api/tourism/service/odata/V2/Tourism/Attraction?%24top=4&%24skip=${number}`,
           {
             headers: { authorization: `Bearer ${data.access_token}` },
-          }
+          },
         );
         setScenicSpots(scenicSpots);
         // console.log(scenicSpots);
 
-        const { data: restaurant } = await axios.get(
-          `https://tdx.transportdata.tw/api/basic/v2/Tourism/Restaurant?%24top=4&%24skip=${number}&%24format=JSON`,
+        const {
+          data: { value: restaurant },
+        } = await axios.get(
+          `https://tdx.transportdata.tw/api/tourism/service/odata/V2/Tourism/Restaurant?%24top=4&%24skip=${number}`,
           {
             headers: { authorization: `Bearer ${data.access_token}` },
-          }
+          },
         );
         setRestaurant(restaurant);
         // console.log(restaurant);
 
         const carouselCity = [
-          "Taipei",
-          "NewTaipei",
-          "Taichung",
-          // "Tainan",
-          "Kaohsiung",
-          "YilanCounty",
-          "HualienCounty",
-          // "TaitungCounty",
+          // "Taipei",
+          // "NewTaipei",
+          // "Taichung",
+          // // "Tainan",
+          // "Kaohsiung",
+          // "YilanCounty",
+          // "HualienCounty",
+          // // "TaitungCounty",
+          "臺北市",
+          "新北市",
+          // "臺中市",
+          // "臺南市",
+          // "高雄市",
+          // "宜蘭縣",
+          // "花蓮縣",
+          // "臺東縣",
         ];
         const carouselData = async (city) => {
-          const { data: carouselObj } = await axios.get(
-            `https://tdx.transportdata.tw/api/basic/v2/Tourism/ScenicSpot/${city}?%24top=1&%24skip=130&%24format=JSON`,
+          const {
+            data: { value: carouselObj },
+          } = await axios.get(
+            `https://tdx.transportdata.tw/api/tourism/service/odata/V2/Tourism/Attraction`,
             {
               headers: { authorization: `Bearer ${data.access_token}` },
-            }
+              params: {
+                $top: 1,
+                $skip: 130,
+                $filter: `PostalAddress/City eq '${city}'`,
+              },
+            },
           );
           return carouselObj[0];
         };
@@ -146,7 +167,7 @@ export default function Home() {
           const results = await Promise.all(promises);
           setCarousel(results);
         };
-        fetchAllData();
+        // fetchAllData();
         // console.log(carousel);
       } catch (err) {
         console.log(err);
@@ -265,7 +286,7 @@ export default function Home() {
         </div>
       </section>
       <main className={style.main}>
-        <section className={style.slider}>
+        {/* <section className={style.slider}>
           {carousel?.map((item, index) => (
             <div
               key={index}
@@ -276,22 +297,21 @@ export default function Home() {
             >
               <Link
                 href={{
-                  pathname: `/spot/${item.ScenicSpotID}`,
+                  pathname: `/spot/${item.AttractionID}`,
                   query: { spot: JSON.stringify(item) },
                 }}
               >
                 <img
-                  src={
-                    item.Picture.PictureUrl1 || "/Images/NoImage-1100x400.svg"
-                  }
+                  src={item.Images[0]?.URL || "/Images/NoImage-1100x400.svg"}
+                  alt={item.Images[0]?.Name}
                 />
                 <p>
-                  {item.City} | {item.ScenicSpotName}
+                  {item.PostalAddress.City} | {item.AttractionName}
                 </p>
               </Link>
             </div>
           ))}
-          {/* <div className={style.control}> */}
+          <div className={style.control}>
           <button
             className={`${style.arrow} ${style.arrowLeft}`}
             onClick={previous}
@@ -312,8 +332,8 @@ export default function Home() {
               ></button>
             ))}
           </div>
-          {/* </div> */}
-        </section>
+          </div>
+        </section> */}
         <section className={style.more}>
           <div className={style.sort}>
             <h4>近期活動</h4>
@@ -324,28 +344,26 @@ export default function Home() {
           </div>
           <div className={style.bigInfo}>
             {activity?.slice(activity.length - 4).map((event) => (
-              <div key={event.ActivityID}>
+              <div key={event.EventID}>
                 <Link
                   href={{
-                    pathname: `/event/${event.ActivityID}`,
+                    pathname: `/event/${event.EventID}`,
                     query: { event: JSON.stringify(event) },
                   }}
                 >
                   <img
-                    src={
-                      event.Picture.PictureUrl1 || "/images/NoImage-160x160.svg"
-                    }
-                    alt=""
+                    src={event.Images[0]?.URL || "/images/NoImage-160x160.svg"}
+                    alt={event.Images[0]?.Name}
                   />
                   <div className={style.description}>
-                    <p className={style.date}>{`${event.StartTime.slice(
+                    <p className={style.date}>{`${event.StartDateTime.slice(
                       0,
-                      10
-                    )} - ${event.EndTime.slice(0, 10)}`}</p>
-                    <p className={style.title}>{event.ActivityName}</p>
+                      10,
+                    )} - ${event.EndDateTime.slice(0, 10)}`}</p>
+                    <p className={style.title}>{event.EventName}</p>
                     <div className={style.city}>
                       <img src="/Icon/spot16.svg" />
-                      {event.City}
+                      {event.PostalAddress.City}
                     </div>
                     <div href="/" className={style.detail}>
                       詳細介紹
@@ -367,22 +385,21 @@ export default function Home() {
           </div>
           <div className={style.smallInfo}>
             {scenicSpots?.slice(scenicSpots.length - 4).map((spot) => (
-              <div key={spot.ScenicSpotID}>
+              <div key={spot.AttractionID}>
                 <Link
                   href={{
-                    pathname: `/spot/${spot.ScenicSpotID}`,
+                    pathname: `/spot/${spot.AttractionID}`,
                     query: { spot: JSON.stringify(spot) },
                   }}
                 >
                   <img
-                    src={
-                      spot.Picture.PictureUrl1 || "/images/NoImage-255x200.svg"
-                    }
+                    src={spot.Images[0]?.URL || "/images/NoImage-255x200.svg"}
+                    alt={spot.Images[0]?.Name}
                   />
                   <div className={style.content}>
-                    <p>{spot.ScenicSpotName}</p>
+                    <p>{spot.AttractionName}</p>
                     <img src="/Icon/spot16.svg" />
-                    {spot.City || spot.Address.slice(0, 3)}
+                    {spot.PostalAddress.City}
                   </div>
                 </Link>
               </div>
@@ -402,19 +419,18 @@ export default function Home() {
               <div key={food.RestaurantID}>
                 <Link
                   href={{
-                    pathname: `/food/${food.ScenicSpotID}`,
+                    pathname: `/food/${food.RestaurantID}`,
                     query: { food: JSON.stringify(food) },
                   }}
                 >
                   <img
-                    src={
-                      food.Picture.PictureUrl1 || "/images/NoImage-255x200.svg"
-                    }
+                    src={food.Images[0]?.URL || "/images/NoImage-255x200.svg"}
+                    alt={food.Images[0]?.Name}
                   />
                   <div className={style.content}>
                     <p>{food.RestaurantName}</p>
                     <img src="/Icon/spot16.svg" />
-                    {food.City || food.Address.slice(0, 3)}
+                    {food.PostalAddress.City}
                   </div>
                 </Link>
               </div>

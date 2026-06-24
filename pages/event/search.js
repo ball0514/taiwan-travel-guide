@@ -29,20 +29,43 @@ export default function Search() {
           qs.stringify(parameter),
           {
             headers: { "content-type": "application/x-www-form-urlencoded" },
-          }
+          },
         );
         // console.log(data.access_token);
-        console.log(city);
-        const { data: activity } = await axios.get(
-          `https://tdx.transportdata.tw/api/basic/v2/Tourism/Activity${
-            city ? `/${city}` : ""
-          }?${q ? `%24filter=contains(ActivityName,'${q}')&` : ""}${
-            cat ? `%24filter=contains(Class1,'${cat}')&` : ""
-          }%24format=JSON`,
-          {
-            headers: { authorization: `Bearer ${data.access_token}` },
-          }
-          // !== "undefined"
+
+        const filterConditions = [];
+
+        if (city) {
+          filterConditions.push(`PostalAddress/City eq '${city}'`);
+        }
+
+        if (q) {
+          filterConditions.push(`contains(AttractionName, '${q}')`);
+        }
+
+        if (cat) {
+          filterConditions.push(`contains(Class1, '${cat}')`);
+        }
+
+        // 用 ' and ' 把所有條件串起來
+        // 組合後會變成: "PostalAddress/City eq '臺北市' and contains(ScenicSpotName, '公園')"
+        const finalFilter = filterConditions.join(" and ");
+
+        const payload = {
+          headers: { authorization: `Bearer ${data.access_token}` },
+        };
+
+        if (filterConditions.length > 0) {
+          payload.params = {
+            $filter: finalFilter,
+          };
+        }
+
+        const {
+          data: { value: activity },
+        } = await axios.get(
+          `https://tdx.transportdata.tw/api/tourism/service/odata/V2/Tourism/Event`,
+          payload,
         );
         console.log(activity);
 
@@ -51,8 +74,8 @@ export default function Search() {
             content.unshift(activity);
           } else {
             if (
-              activity.StartTime.slice(0, 10) < date &&
-              activity.EndTime.slice(0, 10) > date
+              activity.StartDateTime.slice(0, 10) < date &&
+              activity.EndDateTime.slice(0, 10) > date
             ) {
               content.unshift(activity);
             }
@@ -73,6 +96,7 @@ export default function Search() {
         setRender(content);
         console.log(content);
       } catch (err) {
+        setRender([]);
         console.log(err);
       }
     }
@@ -111,22 +135,21 @@ export default function Search() {
               {formData?.[page - 1].map((event) => (
                 <Link
                   href={{
-                    pathname: `/event/${event.ActivityID}`,
+                    pathname: `/event/${event.EventID}`,
                     query: { event: JSON.stringify(event) },
                   }}
-                  key={event.ActivityID}
+                  key={event.EventID}
                   className={style.item}
                 >
                   <img
-                    src={
-                      event.Picture.PictureUrl1 || "/images/NoImage-255x200.svg"
-                    }
+                    src={event.Images[0]?.URL || "/images/NoImage-255x200.svg"}
+                    alt={event.Images[0]?.Name}
                     className={style.picture}
                   />
                   <div className={style.description}>
-                    <p>{event.ActivityName}</p>
+                    <p>{event.EventName}</p>
                     <img src="/Icon/spot16.svg" />
-                    {event.City}
+                    {event.PostalAddress.City}
                   </div>
                 </Link>
               ))}

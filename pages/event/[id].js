@@ -12,6 +12,7 @@ export default function Page() {
   const [center, setCenter] = useState({ lat: "", lng: "" });
   const [city, setCity] = useState(null);
   const [more, setMore] = useState(null);
+  const [number, setNumber] = useState(0);
 
   useEffect(() => {
     async function getData() {
@@ -29,36 +30,37 @@ export default function Page() {
   useEffect(() => {
     if (receivedData) {
       setCenter({
-        lat: receivedData.Position.PositionLat,
-        lng: receivedData.Position.PositionLon,
+        lat: receivedData.PositionLat,
+        lng: receivedData.PositionLon,
       });
     }
 
-    const cityMapping = {
-      臺北市: "Taipei",
-      新北市: "NewTaipei",
-      基隆市: "Keelung",
-      宜蘭縣: "YilanCounty",
-      桃園市: "Taoyuan",
-      新竹縣: "HsinchuCounty",
-      新竹市: "Hsinchu",
-      苗栗縣: "MiaoliCounty",
-      臺中市: "Taichung",
-      彰化縣: "ChanghuaCounty",
-      南投縣: "NantouCounty",
-      雲林縣: "YunlinCounty",
-      嘉義縣: "ChiayiCounty",
-      嘉義市: "Chiayi",
-      臺南市: "Tainan",
-      高雄市: "Kaohsiung",
-      屏東縣: "PingtungCounty",
-      花蓮縣: "HualienCounty",
-      臺東縣: "TaitungCounty",
-      澎湖縣: "PenghuCounty",
-      金門縣: "KinmenCounty",
-      連江縣: "LienchiangCounty",
-    };
-    setCity(cityMapping[receivedData?.City]);
+    // const cityMapping = {
+    //   臺北市: "Taipei",
+    //   新北市: "NewTaipei",
+    //   基隆市: "Keelung",
+    //   宜蘭縣: "YilanCounty",
+    //   桃園市: "Taoyuan",
+    //   新竹縣: "HsinchuCounty",
+    //   新竹市: "Hsinchu",
+    //   苗栗縣: "MiaoliCounty",
+    //   臺中市: "Taichung",
+    //   彰化縣: "ChanghuaCounty",
+    //   南投縣: "NantouCounty",
+    //   雲林縣: "YunlinCounty",
+    //   嘉義縣: "ChiayiCounty",
+    //   嘉義市: "Chiayi",
+    //   臺南市: "Tainan",
+    //   高雄市: "Kaohsiung",
+    //   屏東縣: "PingtungCounty",
+    //   花蓮縣: "HualienCounty",
+    //   臺東縣: "TaitungCounty",
+    //   澎湖縣: "PenghuCounty",
+    //   金門縣: "KinmenCounty",
+    //   連江縣: "LienchiangCounty",
+    // };
+    // setCity(cityMapping[receivedData?.City]);
+    setCity(receivedData?.PostalAddress.City);
   }, [receivedData]);
 
   const containerStyle = {
@@ -73,7 +75,7 @@ export default function Page() {
 
     // 取得台灣時區的日期和時間
     const taiwanDate = new Date(
-      originalDate.toLocaleString("en-US", { timeZone: "Asia/Taipei" })
+      originalDate.toLocaleString("en-US", { timeZone: "Asia/Taipei" }),
     );
 
     // 取得年、月、日
@@ -88,10 +90,11 @@ export default function Page() {
     return `${year}/${month}/${day} ${hours}:${minutes}`;
   }
 
-  const StartTime = formatTaiwanDate(receivedData?.StartTime);
-  const EndTime = formatTaiwanDate(receivedData?.EndTime);
+  const StartTime = formatTaiwanDate(receivedData?.StartDateTime);
+  const EndTime = formatTaiwanDate(receivedData?.EndDateTime);
 
   useEffect(() => {
+    setNumber(Math.floor(25 * Math.random()));
     async function api() {
       try {
         const parameter = {
@@ -105,14 +108,21 @@ export default function Page() {
           qs.stringify(parameter),
           {
             headers: { "content-type": "application/x-www-form-urlencoded" },
-          }
+          },
         );
         // console.log(data.access_token);
-        const { data: activity } = await axios.get(
-          `https://tdx.transportdata.tw/api/basic/v2/Tourism/Activity/${city}?%24top=4&%24format=JSON`,
+        const {
+          data: { value: activity },
+        } = await axios.get(
+          `https://tdx.transportdata.tw/api/tourism/service/odata/V2/Tourism/Event`,
           {
             headers: { authorization: `Bearer ${data.access_token}` },
-          }
+            params: {
+              $top: 4,
+              $skip: number,
+              $filter: `PostalAddress/City eq '${city}'`,
+            },
+          },
         );
         console.log(activity);
         setMore(activity);
@@ -138,22 +148,20 @@ export default function Page() {
           </li>
           <li>
             <Link href={`/event/search?city=${city}`}>
-              / {receivedData?.City}
+              / {receivedData?.PostalAddress.City}
             </Link>
           </li>
-          <li>/ {receivedData?.ActivityName}</li>
+          <li>/ {receivedData?.EventName}</li>
         </ol>
       </nav>
       <main className={style.main}>
         <section className={style.banner}>
           <img
-            src={
-              receivedData?.Picture.PictureUrl1 ||
-              "/images/NoImage-1100x400.svg"
-            }
+            src={receivedData?.Images[0]?.URL || "/images/NoImage-1100x400.svg"}
+            alt={receivedData?.Images[0]?.Name}
           />
         </section>
-        <h4>{receivedData?.ActivityName}</h4>
+        <h4>{receivedData?.EventName}</h4>
         <ol className={style.class}>
           {receivedData?.Class && <li># {receivedData.Class}</li>}
           {receivedData?.Class1 && <li># {receivedData.Class1}</li>}
@@ -172,22 +180,22 @@ export default function Page() {
                 {StartTime} ~ {EndTime}
               </p>
             )}
-            {receivedData?.Phone && (
+            {receivedData?.Telephones?.[0]?.Tel && (
               <p>
                 <span>聯絡電話：</span>
-                {receivedData.Phone}
+                {receivedData.Telephones[0].Tel}
               </p>
             )}
-            {receivedData?.Organizer && (
+            {receivedData?.Organizations?.[0]?.Name && (
               <p>
                 <span>主辦單位：</span>
-                {receivedData.Organizer}
+                {receivedData.Organizations[0].Name}
               </p>
             )}
-            {receivedData?.Address && (
+            {receivedData?.PostalAddress?.StreetAddress && (
               <p>
                 <span>活動地點：</span>
-                {receivedData.Address}
+                {receivedData.PostalAddress.StreetAddress}
               </p>
             )}
             {receivedData?.WebsiteUrl && (
@@ -245,7 +253,7 @@ export default function Page() {
           <div className={style.title}>
             <p>還有這些不能錯過的活動</p>
             <Link href={`/event/search?city=${city}`}>
-              更多{receivedData?.City}活動
+              更多{receivedData?.PostalAddress.City}活動
               <img src="/Icon/arrow-right16_R.svg" />
             </Link>
           </div>
@@ -253,22 +261,21 @@ export default function Page() {
             {more?.map((event) => (
               <Link
                 href={{
-                  pathname: `/event/${event.ActivityID}`,
+                  pathname: `/event/${event.EventID}`,
                   query: { event: JSON.stringify(event) },
                 }}
-                key={event.ActivityID}
+                key={event.EventID}
                 className={style.item}
               >
                 <img
-                  src={
-                    event.Picture.PictureUrl1 || "/images/NoImage-255x200.svg"
-                  }
+                  src={event.Images[0]?.URL || "/images/NoImage-255x200.svg"}
+                  alt={event.Images[0]?.Name}
                   className={style.picture}
                 />
                 <div className={style.description}>
-                  <p>{event.ActivityName}</p>
+                  <p>{event.EventName}</p>
                   <img src="/Icon/spot16.svg" />
-                  {event.City}
+                  {event.PostalAddress.City}
                 </div>
               </Link>
             ))}

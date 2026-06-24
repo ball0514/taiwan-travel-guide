@@ -12,6 +12,7 @@ export default function Page() {
   const [center, setCenter] = useState({ lat: "", lng: "" });
   const [city, setCity] = useState(null);
   const [more, setMore] = useState(null);
+  const [number, setNumber] = useState(0);
 
   useEffect(() => {
     async function getData() {
@@ -29,36 +30,37 @@ export default function Page() {
   useEffect(() => {
     if (receivedData) {
       setCenter({
-        lat: receivedData.Position.PositionLat,
-        lng: receivedData.Position.PositionLon,
+        lat: receivedData.PositionLat,
+        lng: receivedData.PositionLon,
       });
     }
 
-    const cityMapping = {
-      臺北市: "Taipei",
-      新北市: "NewTaipei",
-      基隆市: "Keelung",
-      宜蘭縣: "YilanCounty",
-      桃園市: "Taoyuan",
-      新竹縣: "HsinchuCounty",
-      新竹市: "Hsinchu",
-      苗栗縣: "MiaoliCounty",
-      臺中市: "Taichung",
-      彰化縣: "ChanghuaCounty",
-      南投縣: "NantouCounty",
-      雲林縣: "YunlinCounty",
-      嘉義縣: "ChiayiCounty",
-      嘉義市: "Chiayi",
-      臺南市: "Tainan",
-      高雄市: "Kaohsiung",
-      屏東縣: "PingtungCounty",
-      花蓮縣: "HualienCounty",
-      臺東縣: "TaitungCounty",
-      澎湖縣: "PenghuCounty",
-      金門縣: "KinmenCounty",
-      連江縣: "LienchiangCounty",
-    };
-    setCity(cityMapping[receivedData?.City]);
+    // const cityMapping = {
+    //   臺北市: "Taipei",
+    //   新北市: "NewTaipei",
+    //   基隆市: "Keelung",
+    //   宜蘭縣: "YilanCounty",
+    //   桃園市: "Taoyuan",
+    //   新竹縣: "HsinchuCounty",
+    //   新竹市: "Hsinchu",
+    //   苗栗縣: "MiaoliCounty",
+    //   臺中市: "Taichung",
+    //   彰化縣: "ChanghuaCounty",
+    //   南投縣: "NantouCounty",
+    //   雲林縣: "YunlinCounty",
+    //   嘉義縣: "ChiayiCounty",
+    //   嘉義市: "Chiayi",
+    //   臺南市: "Tainan",
+    //   高雄市: "Kaohsiung",
+    //   屏東縣: "PingtungCounty",
+    //   花蓮縣: "HualienCounty",
+    //   臺東縣: "TaitungCounty",
+    //   澎湖縣: "PenghuCounty",
+    //   金門縣: "KinmenCounty",
+    //   連江縣: "LienchiangCounty",
+    // };
+    // setCity(cityMapping[receivedData?.City]);
+    setCity(receivedData?.PostalAddress.City);
   }, [receivedData]);
 
   const containerStyle = {
@@ -68,6 +70,7 @@ export default function Page() {
   };
 
   useEffect(() => {
+    setNumber(Math.floor(25 * Math.random()));
     async function api() {
       try {
         const parameter = {
@@ -81,14 +84,21 @@ export default function Page() {
           qs.stringify(parameter),
           {
             headers: { "content-type": "application/x-www-form-urlencoded" },
-          }
+          },
         );
         // console.log(data.access_token);
-        const { data: scenicSpots } = await axios.get(
-          `https://tdx.transportdata.tw/api/basic/v2/Tourism/ScenicSpot/${city}?%24top=4&%24format=JSON`,
+        const {
+          data: { value: scenicSpots },
+        } = await axios.get(
+          `https://tdx.transportdata.tw/api/tourism/service/odata/V2/Tourism/Attraction`,
           {
             headers: { authorization: `Bearer ${data.access_token}` },
-          }
+            params: {
+              $top: 4,
+              $skip: number,
+              $filter: `PostalAddress/City eq '${city}'`,
+            },
+          },
         );
         console.log(scenicSpots);
         setMore(scenicSpots);
@@ -114,22 +124,20 @@ export default function Page() {
           </li>
           <li>
             <Link href={`/spot/search?city=${city}`}>
-              / {receivedData?.City}
+              / {receivedData?.PostalAddress.City}
             </Link>
           </li>
-          <li>/ {receivedData?.ScenicSpotName}</li>
+          <li>/ {receivedData?.AttractionName}</li>
         </ol>
       </nav>
       <main className={style.main}>
         <section className={style.banner}>
           <img
-            src={
-              receivedData?.Picture.PictureUrl1 ||
-              "/images/NoImage-1100x400.svg"
-            }
+            src={receivedData?.Images[0]?.URL || "/images/NoImage-1100x400.svg"}
+            alt={receivedData?.Images[0]?.Name}
           />
         </section>
-        <h4>{receivedData?.ScenicSpotName}</h4>
+        <h4>{receivedData?.AttractionName}</h4>
         <ol className={style.class}>
           {receivedData?.Class && <li># {receivedData.Class}</li>}
           {receivedData?.Class1 && <li># {receivedData.Class1}</li>}
@@ -142,22 +150,22 @@ export default function Page() {
         </section>
         <section className={style.detail}>
           <div className={style.info}>
-            {receivedData?.OpenTime && (
+            {receivedData?.ServiceTimeInfo && (
               <p>
                 <span>開放時間：</span>
-                {receivedData.OpenTime}
+                {receivedData.ServiceTimeInfo}
               </p>
             )}
-            {receivedData?.Phone && (
+            {receivedData?.Telephones?.[0]?.Tel && (
               <p>
                 <span>服務電話：</span>
-                {receivedData.Phone}
+                {receivedData.Telephones[0].Tel}
               </p>
             )}
-            {receivedData?.Address && (
+            {receivedData?.PostalAddress?.StreetAddress && (
               <p>
                 <span>景點地址：</span>
-                {receivedData.Address}
+                {receivedData.PostalAddress.StreetAddress}
               </p>
             )}
             {receivedData?.WebsiteUrl && (
@@ -212,7 +220,7 @@ export default function Page() {
           <div className={style.title}>
             <p>還有這些不能錯過的景點</p>
             <Link href={`/spot/search?city=${city}`}>
-              更多{receivedData?.City}景點
+              更多{receivedData?.PostalAddress.City}景點
               <img src="/Icon/arrow-right16_R.svg" />
             </Link>
           </div>
@@ -220,22 +228,21 @@ export default function Page() {
             {more?.map((spot) => (
               <Link
                 href={{
-                  pathname: `/spot/${spot.ScenicSpotID}`,
+                  pathname: `/spot/${spot.AttractionID}`,
                   query: { spot: JSON.stringify(spot) },
                 }}
-                key={spot.ScenicSpotID}
+                key={spot.AttractionID}
                 className={style.item}
               >
                 <img
-                  src={
-                    spot.Picture.PictureUrl1 || "/images/NoImage-255x200.svg"
-                  }
+                  src={spot.Images[0]?.URL || "/images/NoImage-255x200.svg"}
+                  alt={spot.Images[0]?.Name}
                   className={style.picture}
                 />
                 <div className={style.description}>
-                  <p>{spot.ScenicSpotName}</p>
+                  <p>{spot.AttractionName}</p>
                   <img src="/Icon/spot16.svg" />
-                  {spot.City}
+                  {spot.PostalAddress.City}
                 </div>
               </Link>
             ))}
